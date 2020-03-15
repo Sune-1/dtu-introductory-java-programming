@@ -5,25 +5,6 @@ import java.util.Scanner;
 public class RaceTrack {
 	static Scanner console = new Scanner(System.in);
 
-	static final int MOVE_NORTH_WEST = 7;
-	static final int MOVE_NORTH_EAST = 9;
-	static final int MOVE_SOUTH_WEST = 1;
-	static final int MOVE_SOUTH_EAST = 3;
-	static final int MOVE_NORTH = 8;
-	static final int MOVE_SOUTH = 2;
-	static final int MOVE_EAST = 6;
-	static final int MOVE_WEST = 4;
-	
-	static int[] principlePoint = new int[] {0, 0};
-	static int[] NORTH = new int[] {0, 1};
-	static int[] SOUTH = new int[] {0, -1};
-	static int[] EAST = new int[] {1, 0};
-	static int[] WEST = new int[] {-1, 0};
-	static int[] NORTH_EAST = new int[] {1, 1};
-	static int[] NORTH_WEST = new int[] {-1, 1};
-	static int[] SOUTH_EAST = new int[] {1, -1};
-	static int[] SOUTH_WEST = new int[] {-1, -1};
-	
 	static int acceleration = 1;
 
 	public static void main(String[] args) {
@@ -32,32 +13,76 @@ public class RaceTrack {
 
 	private static void runRaceTrackSimulation() {
 		int size = gridSize(console);
-		int[] coordinates = new int[] { 0, size - size / 4  };				
+		int[] currentPosition = new int[] { 0, size - size / 4  };	
+		int[] prevPosition;
 		initDraw(size);
-		int prevMove = 0;
-		int move = 0;
+		int[] tempPrevPosition = null; 
 		int steps = 0;
 		while (true) {
 			steps++;
-			int xPrevCoordinate = coordinates[0];
-			int yPrevCoordinate = coordinates[1];
-			int[] prevCoordinates = coordinates;
-			prevMove = move;
-			move = console.nextInt();
-			coordinates = getMovementCoordinates(coordinates, move, prevMove);
-			int xCoordinate = coordinates[0];
-			int yCoordinate = coordinates[1];
-			StdDraw.line(xPrevCoordinate,yPrevCoordinate,xCoordinate,yCoordinate);
-			System.out.println(Arrays.toString(coordinates));
-			if ((size <= Math.abs(coordinates[0])) || size <= Math.abs(coordinates[1])) {
+			prevPosition = currentPosition;
+			currentPosition = finalMove(tempPrevPosition != null ? tempPrevPosition : prevPosition, currentPosition, movementInteraction(console));
+			drawCarMovement(currentPosition, prevPosition);
+			tempPrevPosition = prevPosition;
+			System.out.println(Arrays.toString(currentPosition));
+			if ((size <= Math.abs(currentPosition[0])) || size <= Math.abs(currentPosition[1])) {
 				System.out.println("Total number of steps = " + steps);
 				break;
 			}
 
 		}
 		// walkSimulation(iterations);
+		//
 	}
+	
+	private static int[] finalMove(int[] prevPosition, int[] currentPosition, int[] move) {
+		System.out.println("prevPosition" + Arrays.toString(prevPosition));
+		System.out.println("currentPosition" + Arrays.toString(currentPosition));
+		System.out.println("move" + Arrays.toString(move));
+		int y = currentPosition[1] + (currentPosition[1] - prevPosition[1] + move[1]);
+		int x = currentPosition[0] + ((currentPosition[0] - prevPosition[0]) + move[0]);
+		int[] newPosition = new int[] {x,y};
+		System.out.println("newCoordinates" + Arrays.toString(newPosition));
+		return newPosition;	
+	}
+	
 
+	private static void drawCarMovement(int[] currentPosition, int[] prevPosition) {
+		int xCoordinate = currentPosition[0];
+		int yCoordinate = currentPosition[1];
+		int xPrevCoordinate = prevPosition[0];
+		int yPrevCoordinate = prevPosition[1];
+		StdDraw.line(xPrevCoordinate,yPrevCoordinate,xCoordinate,yCoordinate);
+	}
+		
+	public static int[] movementInteraction(Scanner console) {
+		int[] directionChoice;
+		int move = console.nextInt();
+		
+		if (move == 8) {
+			directionChoice = new int[] {0, 1};
+		}else if (move == 2) {
+			directionChoice = new int[] {0, -1};
+		}else if (move == 6) {
+			directionChoice = new int[] {1, 0};
+		}else if (move == 4) {
+			directionChoice = new int[] {-1, 0};
+		}else if (move == 7) {
+			directionChoice = new int[] {-1, 1};
+		}else if (move == 9) {
+			directionChoice = new int[] {1, 1};
+		}else if (move == 1) {
+			directionChoice = new int[] {-1, -1};
+		}else if (move == 3) {
+			directionChoice = new int[] {1, -1};
+		}else if (move == 5) {
+			directionChoice = new int[] {0, 0};
+		}else {
+			throw new IllegalStateException("Invalid move!");
+		}
+		return directionChoice;
+	
+	}
 	/**
 	 * Initializes StdDraw with the
 	 * Race Track configuration
@@ -101,7 +126,7 @@ public class RaceTrack {
 
 	
 	
-	public static int[] direction(int direction, int prevDirection, int[] prevCoordinates) {
+//	public static int[] direction(int direction, int prevDirection, int[] prevCoordinates) {
 //		if (direction == prevDirection) {
 //			acceleration++;
 //		} else if ()
@@ -116,38 +141,41 @@ public class RaceTrack {
 //		} else {
 //			acceleration = 1;
 //		
-		return null;
-	}
-	
-	public static int[] getMovementCoordinates(int[] prevCoordinates, int direction, int prevDirection) {
+//		return null;
+//	}
+//	
+//	public static int[] getMovementCoordinates(int[] prevCoordinates, int[] coordinates, int[]move) {
+//		
+//		
+//		
+//		
+//				
+//		if ( == coordinates) {
+//
+//		} else if (MOVE_SOUTH == coordinates) {
+//			prevCoordinates[1] = prevCoordinates[1] -= 1;
+//		} else if (MOVE_EAST == coordinates) {
+//
+//		} else if (MOVE_WEST == coordinates) {
+//			prevCoordinates[0] = prevCoordinates[0] -= 1;
+//		} else if (MOVE_NORTH_WEST == coordinates) {
+//			prevCoordinates[0] = prevCoordinates[0] -= 1;
+//			prevCoordinates[1] = prevCoordinates[1] += 1;
+//		} else if (MOVE_NORTH_EAST == coordinates) {
+//			prevCoordinates[0] = prevCoordinates[0] += 1;
+//			prevCoordinates[1] = prevCoordinates[1] += 1;
+//		} else if (MOVE_SOUTH_WEST == coordinates) {
+//			prevCoordinates[0] = prevCoordinates[0] -= 1;
+//			prevCoordinates[1] = prevCoordinates[1] -= 1;
+//		} else if (MOVE_SOUTH_EAST  == coordinates) {
+//			prevCoordinates[0] = prevCoordinates[0] += 1;
+//			prevCoordinates[1] = prevCoordinates[1] -= 1;
+//		} else {
+//			throw new IllegalStateException("Invalid move!");
+//		}
+//		return prevCoordinates;
+//	}
 
-
-		if (MOVE_NORTH == direction) {
-
-		} else if (MOVE_SOUTH == direction) {
-			prevCoordinates[1] = prevCoordinates[1] -= 1;
-		} else if (MOVE_EAST == direction) {
-
-		} else if (MOVE_WEST == direction) {
-			prevCoordinates[0] = prevCoordinates[0] -= 1;
-		} else if (MOVE_NORTH_WEST == direction) {
-			prevCoordinates[0] = prevCoordinates[0] -= 1;
-			prevCoordinates[1] = prevCoordinates[1] += 1;
-		} else if (MOVE_NORTH_EAST == direction) {
-			prevCoordinates[0] = prevCoordinates[0] += 1;
-			prevCoordinates[1] = prevCoordinates[1] += 1;
-		} else if (MOVE_SOUTH_WEST == direction) {
-			prevCoordinates[0] = prevCoordinates[0] -= 1;
-			prevCoordinates[1] = prevCoordinates[1] -= 1;
-		} else if (MOVE_SOUTH_EAST  == direction) {
-			prevCoordinates[0] = prevCoordinates[0] += 1;
-			prevCoordinates[1] = prevCoordinates[1] -= 1;
-		} else {
-			throw new IllegalStateException("Invalid move!");
-		}
-		return prevCoordinates;
-	}
-	
 	
 	
 //	public static int[] getMovementCoordinates(int[] prevCoordinates, int direction, int prevDirection) {
