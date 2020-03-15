@@ -5,14 +5,15 @@ import java.util.Scanner;
 public class RaceTrack {
 	static Scanner console = new Scanner(System.in);
 
-	static int acceleration = 1;
-
+	
 	public static void main(String[] args) {
 		runRaceTrackSimulation();
 	}
 
 	private static void runRaceTrackSimulation() {
 		int size = gridSize(console);
+		int[] innerboundary1 = new int[] {size/2, size/2};
+		int[] innerboundary2 = new int[] {-size/2, -size/2};
 		int[] currentPosition = new int[] { 0, size - size / 4  };	
 		int[] prevPosition;
 		initDraw(size);
@@ -26,15 +27,21 @@ public class RaceTrack {
 			tempPrevPosition = prevPosition;
 			System.out.println(Arrays.toString(currentPosition));
 			if ((size <= Math.abs(currentPosition[0])) || size <= Math.abs(currentPosition[1])) {
-				System.out.println("Total number of steps = " + steps);
+				System.out.println("You crashed! \nTotal number of steps = " + steps);
+				break;
+			}else if (( innerboundary1[0] <= currentPosition[0]) || innerboundary1[0] <= currentPosition[0]) {
+				System.out.println("You crashed! You stepped into the inner boundary");
+				break;
+			}else if (( innerboundary2[0] <= currentPosition[0]) || innerboundary2[0] <= currentPosition[0]) {
+				System.out.println("You crashed! You stepped into the inner boundary");
 				break;
 			}
-
 		}
-		// walkSimulation(iterations);
-		//
 	}
+
 	
+
+
 	private static int[] finalMove(int[] prevPosition, int[] currentPosition, int[] move) {
 		System.out.println("prevPosition" + Arrays.toString(prevPosition));
 		System.out.println("currentPosition" + Arrays.toString(currentPosition));
@@ -89,6 +96,7 @@ public class RaceTrack {
 	 * @param size
 	 */
 	private static void initDraw(int size) {
+		
 		StdDraw.setXscale(-size, size);
 		StdDraw.setYscale(-size, size);
 		StdDraw.setPenRadius(2.0/1000);
@@ -104,131 +112,4 @@ public class RaceTrack {
 		return console.nextInt();
 	}
 
-//	public static int [][] getCoordinate(int size) {
-//		int[][] grid = new int[size+1][2];
-//		
-//		
-//		
-//		for(int k = 0; k <= size; k++) {
-//			for(int i=k; i <= size; i++) {
-//				grid[i][0] = i;
-//			}	
-//		}
-//
-//		
-//		
-//		for(int j =0; j<=size; j++) {
-//			grid[j][1] = j;
-//		}
-//		System.out.println("Coordinate bc: " + "\n"+ Arrays.deepToString(grid));
-//		return grid;
-//	}
-
-	
-	
-//	public static int[] direction(int direction, int prevDirection, int[] prevCoordinates) {
-//		if (direction == prevDirection) {
-//			acceleration++;
-//		} else if ()
-//		
-//		if (prevDirection == MOVE_DOWN) {
-//			if (acceleration != 1) {
-//				acceleration--;
-//			}
-//			prevCoordinates[1] = prevCoordinates[1] = acceleration;
-//		} else 
-//			prevCoordinates[1] = prevCoordinates[1] += acceleration;
-//		} else {
-//			acceleration = 1;
-//		
-//		return null;
-//	}
-//	
-//	public static int[] getMovementCoordinates(int[] prevCoordinates, int[] coordinates, int[]move) {
-//		
-//		
-//		
-//		
-//				
-//		if ( == coordinates) {
-//
-//		} else if (MOVE_SOUTH == coordinates) {
-//			prevCoordinates[1] = prevCoordinates[1] -= 1;
-//		} else if (MOVE_EAST == coordinates) {
-//
-//		} else if (MOVE_WEST == coordinates) {
-//			prevCoordinates[0] = prevCoordinates[0] -= 1;
-//		} else if (MOVE_NORTH_WEST == coordinates) {
-//			prevCoordinates[0] = prevCoordinates[0] -= 1;
-//			prevCoordinates[1] = prevCoordinates[1] += 1;
-//		} else if (MOVE_NORTH_EAST == coordinates) {
-//			prevCoordinates[0] = prevCoordinates[0] += 1;
-//			prevCoordinates[1] = prevCoordinates[1] += 1;
-//		} else if (MOVE_SOUTH_WEST == coordinates) {
-//			prevCoordinates[0] = prevCoordinates[0] -= 1;
-//			prevCoordinates[1] = prevCoordinates[1] -= 1;
-//		} else if (MOVE_SOUTH_EAST  == coordinates) {
-//			prevCoordinates[0] = prevCoordinates[0] += 1;
-//			prevCoordinates[1] = prevCoordinates[1] -= 1;
-//		} else {
-//			throw new IllegalStateException("Invalid move!");
-//		}
-//		return prevCoordinates;
-//	}
-
-	
-	
-//	public static int[] getMovementCoordinates(int[] prevCoordinates, int direction, int prevDirection) {
-//		if (direction == prevDirection) {
-//			acceleration++;
-//		} else {
-//			acceleration--;
-//		}
-//
-//		if (MOVE_NORTH == direction) {
-//			if (acceleration > 1) {
-//				if (prevCoordinates[1] < 0) {
-//					 prevCoordinates[1] -= -acceleration;
-//				} else {
-//					prevCoordinates[1] = prevCoordinates[1] += acceleration;
-//				}
-//			} else {
-//				prevCoordinates[1] = prevCoordinates[1] += acceleration;	
-//			}
-//		} else if (MOVE_SOUTH == direction) {
-//			prevCoordinates[1] = prevCoordinates[1] -= 1;
-//		} else if (MOVE_EAST == direction) {
-//			if (acceleration > 1) {
-//				if (prevCoordinates[0] < 0) {
-//					 prevCoordinates[0] -= -acceleration;
-//				} else {
-//					prevCoordinates[0] = prevCoordinates[0] += acceleration;
-//				}
-//			} else {
-//				prevCoordinates[0] = prevCoordinates[0] += acceleration;	
-//			}
-//			
-//		} else if (MOVE_WEST == direction) {
-//			prevCoordinates[0] = prevCoordinates[0] -= 1;
-//		} else if (MOVE_NORTH_WEST == direction) {
-//			prevCoordinates[0] = prevCoordinates[0] -= 1;
-//			prevCoordinates[1] = prevCoordinates[1] += 1;
-//		} else if (MOVE_NORTH_EAST == direction) {
-//			prevCoordinates[0] = prevCoordinates[0] += 1;
-//			prevCoordinates[1] = prevCoordinates[1] += 1;
-//		} else if (MOVE_SOUTH_WEST == direction) {
-//			prevCoordinates[0] = prevCoordinates[0] -= 1;
-//			prevCoordinates[1] = prevCoordinates[1] -= 1;
-//		} else if (MOVE_SOUTH_EAST  == direction) {
-//			prevCoordinates[0] = prevCoordinates[0] += 1;
-//			prevCoordinates[1] = prevCoordinates[1] -= 1;
-//		} else {
-//			throw new IllegalStateException("Invalid move!");
-//		}
-//		return prevCoordinates;
-//	}
-
-
 }
-
-
