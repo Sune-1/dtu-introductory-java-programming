@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.Scanner;
 
+
 public class RaceTrack {
     private static Scanner console = new Scanner(System.in);
     private static int[] startPosition;
@@ -28,23 +29,33 @@ public class RaceTrack {
             System.out.println(Arrays.toString(currentPosition));
 
             steps++;
-        } while (!hasCrashed(size, currentPosition, steps));
+        } while ((!hasWon(size, currentPosition, prevPosition, steps) && !hasCrashed(size, currentPosition, prevPosition, steps)));
     }
 
-    private static boolean hasCrashed(int size, int[] position, int steps) {
-        int corner = size/2;
-    	int x = Math.abs(position[0]);
-        int y = Math.abs(position[1]);
-
-        if ((x - corner) <= 0 && (y - corner) <= 0) {
-            System.out.println("You crashed inside boundary");
+    private static boolean hasCrashed(int size, int[] currentPosition, int[] prevPosition, int steps) {
+        int innerBoundary = size/2;
+    	int x = Math.abs(currentPosition[0]);
+        int y = Math.abs(currentPosition[1]);
+        if ((x - innerBoundary) <= 0 && (y - innerBoundary) <= 0) {
+            System.out.println("You crashed in the inside boundary." + "\nTotal number of steps = " + steps);
             return true;
         } else if (size <= x || size <= y) {
             System.out.println("You crashed! \nTotal number of steps = " + steps);
             return true;
-        }
+        } 
+        
         return false;
     }
+
+	private static boolean hasWon(int size, int[] currentPosition, int[] prevPosition, int steps) {
+		if (prevPosition[0] < 0 && prevPosition[1] > (size/2)) {
+        	if (currentPosition[0] >= -1) {
+        		System.out.println("YOU FINISHED! \nTotal number of steps = " + steps );
+        		return true;
+        	}
+        }
+		return false;
+	}
 
 
     private static int[] finalMove(int[] prevPosition, int[] currentPosition, int[] move) {
@@ -104,9 +115,11 @@ public class RaceTrack {
 
         StdDraw.setXscale(-size, size);
         StdDraw.setYscale(-size, size);
-        StdDraw.setPenRadius(2.0/1000);
+        StdDraw.setPenRadius(5.0/1000);
         StdDraw.setPenColor(Color.green);
         StdDraw.line(0,size/2,0,size);
+        StdDraw.setPenColor(Color.red);
+        StdDraw.line(-1, size/2.0, -1, size);
         StdDraw.setPenColor(Color.black);
         StdDraw.square(0,0,size);
         StdDraw.filledSquare(0,0,size/2);
